@@ -24,16 +24,21 @@ class HomeController extends Controller
     public function index()
     {
         $sections = Section::where('is_active', true)
-            ->orderBy('sort_order')
-            ->get();
+                    ->orderBy('sort_order')
+                    ->orderBy('id')
+                    ->get();
 
         $menus = Menu::with('section')
-            ->where('is_active', true)
-            ->whereHas('section', function ($query) {
-                $query->where('is_active', true);
-            })
-            ->orderBy('sort_order')
-            ->get();
+                ->where('is_active', true)
+                ->where(function ($query) {
+                    $query->whereNull('section_id')
+                        ->orWhereHas('section', function ($sectionQuery) {
+                            $sectionQuery->where('is_active', true);
+                        });
+                })
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get();
 
         $hero = Hero::first();
 

@@ -39,6 +39,7 @@
 
         @elseif ($section->section_key === 'contact')
             @include('frontend.sections.contact')
+]
         @endif
 
     @endforeach

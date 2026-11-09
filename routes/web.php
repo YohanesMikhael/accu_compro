@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\OperationalFacilityController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\ContactSettingController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Frontend\CareerController;
+use App\Http\Controllers\Admin\CareerPositionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +27,12 @@ use Illuminate\Support\Facades\Route;
 // Frontend
 Route::get('/', [HomeController::class, 'index'])
     ->name('home');
+
+Route::get('/karir', [CareerController::class, 'index'])
+    ->name('career.index');
+
+Route::get('/karir/{slug}', [CareerController::class, 'show'])
+    ->name('career.show');
 
 // Dashboard: semua pengguna yang sudah login
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -92,6 +101,18 @@ Route::middleware(['auth', 'role:super_admin,admin'])
         // Contact Us
         Route::get('/contact-settings', [ContactSettingController::class, 'edit'])->name('contact-settings.edit');
         Route::put('/contact-settings', [ContactSettingController::class, 'update']) ->name('contact-settings.update');
+
+        // MENU
+        Route::get('/menus', [MenuController::class, 'index']) ->name('menus.index');
+        Route::patch('/menus/{id}/toggle', [MenuController::class, 'toggle'])->name('menus.toggle');
+
+        //KARIR
+        Route::get('/career-positions', [CareerPositionController::class, 'index']) ->name('career-positions.index');
+        Route::get('/career-positions/create', [CareerPositionController::class, 'create'])->name('career-positions.create');
+        Route::post('/career-positions', [CareerPositionController::class, 'store'])->name('career-positions.store');
+        Route::get('/career-positions/{id}/edit', [CareerPositionController::class, 'edit'])->name('career-positions.edit');
+        Route::put('/career-positions/{id}', [CareerPositionController::class, 'update'])->name('career-positions.update');
+        Route::delete('/career-positions/{id}', [CareerPositionController::class, 'destroy'])->name('career-positions.destroy');
     });
 
 // User Management: khusus Super Admin

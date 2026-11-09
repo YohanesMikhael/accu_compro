@@ -100,6 +100,11 @@
                         'route' => 'admin.contact-settings.edit',
                         'icon' => 'mopsy-flower',
                     ],
+                    [
+                        'name' => 'Menu Settings',
+                        'route' => 'admin.menus.index',
+                        'icon' => 'mopsy-flower',
+                    ],
                 ];
             @endphp
 
