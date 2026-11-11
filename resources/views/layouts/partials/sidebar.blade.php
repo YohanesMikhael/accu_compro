@@ -46,6 +46,24 @@
                 <span>▦</span>
                 Dashboard
             </a>
+
+            <a href="{{ route('admin.users.index') }}"
+                class="mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition
+                {{ request()->routeIs('admin.users.*')
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-300 hover:bg-slate-800' }}">
+                <i class="fa fa-user-plus mr-2"></i>
+                Users
+            </a>
+
+            <a href="{{ route('admin.menus.index') }}"
+                class="mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition
+                {{ request()->routeIs('admin.menus.*')
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-300 hover:bg-slate-800' }}">
+                <i class="fa fa-cogs mr-2"></i>
+                Menus
+            </a>
         </div>
 
         <div>
@@ -58,52 +76,52 @@
                     [
                         'name' => 'Hero Section',
                         'route' => 'admin.hero.edit',
-                        'icon' => 'layout-panel-top',
+                        'icon' => 'fa-picture-o',
                     ],
                     [
                         'name' => 'About Section',
                         'route' => 'admin.about.edit',
-                        'icon' => 'info',
+                        'icon' => 'fa-info-circle',
                     ],
                     [
                         'name' => 'Visi & Misi',
                         'route' => 'admin.vision-mission.edit',
-                        'icon' => 'target',
+                        'icon' => 'fa-bullseye',
                     ],
                     [
                         'name' => 'Company Values',
                         'route' => 'admin.our-values.edit',
-                        'icon' => 'star',
+                        'icon' => 'fa-star',
                     ],
                     [
                         'name' => 'Services',
                         'route' => 'admin.services.edit',
-                        'icon' => 'mopsy-flower',
+                        'icon' => 'fa-briefcase',
                     ],
                     [
                         'name' => 'Facilities',
                         'route' => 'admin.operational-facilities.edit',
-                        'icon' => 'mopsy-flower',
+                        'icon' => 'fa-building',
                     ],
                     [
                         'name' => 'Clients',
                         'route' => 'admin.clients.edit',
-                        'icon' => 'mopsy-flower',
+                        'icon' => 'fa-handshake-o',
                     ],
                     [
                         'name' => 'Gallery',
                         'route' => 'admin.galleries.edit',
-                        'icon' => 'mopsy-flower',
+                        'icon' => 'fa-picture-o',
                     ],
                     [
                         'name' => 'Contact Us',
                         'route' => 'admin.contact-settings.edit',
-                        'icon' => 'mopsy-flower',
+                        'icon' => 'fa-phone',
                     ],
                     [
-                        'name' => 'Menu Settings',
-                        'route' => 'admin.menus.index',
-                        'icon' => 'mopsy-flower',
+                        'name' => 'Career',
+                        'route' => 'admin.career-positions.index',
+                        'icon' => 'fa-briefcase',
                     ],
                 ];
             @endphp
@@ -115,26 +133,13 @@
                         ? 'bg-blue-600 text-white'
                         : 'text-slate-300 hover:bg-slate-800' }}">
 
-                    <i data-lucide="{{ $menu['icon'] }}" class="h-5 w-5"></i>
+                    <i class="fa {{ $menu['icon'] }} w-5 text-center text-base"></i>
 
                     {{ $menu['name'] }}
                 </a>
             @endforeach
+
         </div>
-
-        @if (auth()->user()->role === 'super_admin')
-            <div>
-                <p class="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                    Administration
-                </p>
-
-                <div class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-500">
-                    <i class="fa-solid fa-users w-5 text-center"></i>
-                    Manajemen User
-                    <span class="ml-auto text-xs">Segera</span>
-                </div>
-            </div>
-        @endif
 
     </nav>
 

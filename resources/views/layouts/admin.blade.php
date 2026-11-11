@@ -13,11 +13,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            lucide.createIcons();
-        });
-    </script>
+    <<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body class="bg-slate-100 text-slate-800 antialiased" x-data="{ sidebarOpen: false }">

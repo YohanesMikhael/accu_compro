@@ -1,21 +1,22 @@
 
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Frontend\HomeController;
-use App\Http\Controllers\Admin\HeroController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\CompanyProfileController;
-use App\Http\Controllers\Admin\VisionMissionController;
-use App\Http\Controllers\Admin\CompanyValueController;
-use App\Http\Controllers\Admin\ServiceController;
-use App\Http\Controllers\Admin\OperationalFacilityController;
-use App\Http\Controllers\Admin\ClientController;
-use App\Http\Controllers\Admin\GalleryController;
-use App\Http\Controllers\Admin\ContactSettingController;
-use App\Http\Controllers\Admin\MenuController;
-use App\Http\Controllers\Frontend\CareerController;
 use App\Http\Controllers\Admin\CareerPositionController;
+use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\CompanyProfileController;
+use App\Http\Controllers\Admin\CompanyValueController;
+use App\Http\Controllers\Admin\ContactSettingController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\HeroController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\OperationalFacilityController;
+use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\VisionMissionController;
+use App\Http\Controllers\Frontend\CareerController;
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,6 +57,9 @@ Route::middleware(['auth', 'role:super_admin,admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        // Users
+        Route::resource('users', UserController::class)->only(['index', 'store', 'update', 'destroy']);
+        
         // Hero
         Route::get('/hero', [HeroController::class, 'edit'])->name('hero.edit');
         Route::put('/hero', [HeroController::class, 'update'])->name('hero.update');
@@ -113,16 +117,6 @@ Route::middleware(['auth', 'role:super_admin,admin'])
         Route::get('/career-positions/{id}/edit', [CareerPositionController::class, 'edit'])->name('career-positions.edit');
         Route::put('/career-positions/{id}', [CareerPositionController::class, 'update'])->name('career-positions.update');
         Route::delete('/career-positions/{id}', [CareerPositionController::class, 'destroy'])->name('career-positions.destroy');
-    });
-
-// User Management: khusus Super Admin
-Route::middleware(['auth', 'role:super_admin'])
-    ->prefix('dashboard/users')
-    ->name('admin.users.')
-    ->group(function () {
-
-        // User Management routes akan ditambahkan di sini
-
     });
 
 require __DIR__.'/auth.php';

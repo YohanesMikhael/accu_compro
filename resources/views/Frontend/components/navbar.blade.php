@@ -123,7 +123,7 @@
                 @endforeach
 
                 {{-- CAREER --}}
-                @if ($menus->contains('anchor', '/career'))
+                @if ($menus->contains('anchor', '/karir'))
                     <a href="{{ route('career.index') }}"
                         class="text-sm font-semibold text-slate-600 transition hover:text-accu-primary">
                         Career
@@ -274,7 +274,7 @@
                 </div>
 
                 {{-- CLIENTS & GALLERY --}}
-                @foreach ($menus->whereIn('anchor', ['clients', 'gallery', 'career']) as $menu)
+                @foreach ($menus->whereIn('anchor', ['clients', 'gallery']) as $menu)
                     <a href="#{{ ltrim($menu->anchor, '#') }}"
                     @click="open = false"
                     class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">
@@ -283,9 +283,10 @@
                 @endforeach
 
                 {{-- CAREER --}}
-                @if ($menus->contains('anchor', '/career'))
+                @if ($menus->contains('anchor', '/karir'))
                     <a href="{{ route('career.index') }}"
-                        class="text-sm font-semibold text-slate-600 transition hover:text-accu-primary">
+                        @click="open = false"
+                        class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">
                         Career
                     </a>
                 @endif

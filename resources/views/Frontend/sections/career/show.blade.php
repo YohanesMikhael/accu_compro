@@ -45,9 +45,7 @@
                 Kualifikasi
             </h2>
 
-            <div class="mt-4 whitespace-pre-line text-sm leading-8 text-slate-600">
-                {{ $position->requirements ?: 'Informasi kualifikasi belum tersedia.' }}
-            </div>
+            <div class="mt-4 whitespace-pre-line break-words text-sm leading-8 text-slate-600">{{ $position->requirements ?: 'Informasi kualifikasi belum tersedia.' }}</div>
 
             @if($position->application_url)
                 <a href="{{ $position->application_url }}"
