@@ -12,12 +12,12 @@
     class="fixed top-0 left-0 z-50 w-full px-4 pt-5 sm:px-6 lg:px-8"
 >
     <div
-        class="mx-auto max-w-7xl rounded-full border border-slate-200/80
+        class="mx-auto max-w-7xl rounded-[24px] border border-slate-200/80
             bg-white/95 shadow-lg shadow-slate-900/5 backdrop-blur-xl
-            transition-all duration-300"
+            transition-all duration-300 lg:rounded-full"
         :class="scrolled ? 'shadow-xl' : ''"
     >
-        <div class="flex h-[84px] items-center justify-between px-5 sm:px-8">
+        <div class="flex h-[72px] items-center justify-between px-5 sm:h-[84px] sm:px-8">
             {{-- LOGO --}}
             <a href="{{ url('/') }}"
                 class="flex shrink-0 items-center">
@@ -25,7 +25,7 @@
                     <img
                         src="{{ asset('images/accu-logo.png') }}"
                         alt="PT Abhinaya Citra Cakra Utama"
-                        class="h-auto w-[150px] object-contain sm:w-[175px] lg:w-[190px]"
+                        class="h-auto w-[150px] object-contain sm:w-[150px] lg:w-[190px]"
                     >
 
             </a>
@@ -201,14 +201,15 @@
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
             @click.outside="open = false"
-            class="border-t border-slate-100 px-6 pb-6 pt-3 lg:hidden"
+            class="max-h-[calc(100dvh-115px)] overflow-y-auto border-t border-slate-100 px-4 pb-5 pt-3 lg:hidden"
         >
             <div class="flex flex-col gap-1">
+
                 {{-- HOME --}}
                 @foreach ($menus->where('anchor', 'home') as $menu)
                     <a href="#{{ ltrim($menu->anchor, '#') }}"
-                    @click="open = false"
-                    class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        @click="open = false"
+                        class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
                         {{ $menu->label }}
                     </a>
                 @endforeach
@@ -218,7 +219,7 @@
                     <button
                         type="button"
                         @click="mobileAboutOpen = !mobileAboutOpen; mobileServicesOpen = false"
-                        class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
                     >
                         About Us
 
@@ -232,11 +233,16 @@
                         </svg>
                     </button>
 
-                    <div x-show="mobileAboutOpen" x-cloak class="ml-4 border-l-2 border-blue-100 pl-3">
+                    <div
+                        x-show="mobileAboutOpen"
+                        x-cloak
+                        x-transition
+                        class="ml-4 border-l-2 border-blue-100 pl-3"
+                    >
                         @foreach ($menus->whereIn('anchor', ['profile', 'vision-mission', 'values']) as $menu)
                             <a href="#{{ ltrim($menu->anchor, '#') }}"
-                            @click="open = false"
-                            class="block rounded-lg px-4 py-3 text-sm text-slate-500 hover:bg-blue-50 hover:text-accu-primary">
+                                @click="open = false; mobileAboutOpen = false"
+                                class="block rounded-lg px-4 py-3 text-sm text-slate-500 transition hover:bg-blue-50 hover:text-accu-primary">
                                 {{ $menu->label }}
                             </a>
                         @endforeach
@@ -248,7 +254,7 @@
                     <button
                         type="button"
                         @click="mobileServicesOpen = !mobileServicesOpen; mobileAboutOpen = false"
-                        class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        class="flex w-full items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
                     >
                         Services
 
@@ -262,11 +268,16 @@
                         </svg>
                     </button>
 
-                    <div x-show="mobileServicesOpen" x-cloak class="ml-4 border-l-2 border-blue-100 pl-3">
+                    <div
+                        x-show="mobileServicesOpen"
+                        x-cloak
+                        x-transition
+                        class="ml-4 border-l-2 border-blue-100 pl-3"
+                    >
                         @foreach ($menus->whereIn('anchor', ['services', 'facilities', 'catalog']) as $menu)
                             <a href="#{{ ltrim($menu->anchor, '#') }}"
-                            @click="open = false"
-                            class="block rounded-lg px-4 py-3 text-sm text-slate-500 hover:bg-blue-50 hover:text-accu-primary">
+                                @click="open = false; mobileServicesOpen = false"
+                                class="block rounded-lg px-4 py-3 text-sm text-slate-500 transition hover:bg-blue-50 hover:text-accu-primary">
                                 {{ $menu->label }}
                             </a>
                         @endforeach
@@ -276,8 +287,8 @@
                 {{-- CLIENTS & GALLERY --}}
                 @foreach ($menus->whereIn('anchor', ['clients', 'gallery']) as $menu)
                     <a href="#{{ ltrim($menu->anchor, '#') }}"
-                    @click="open = false"
-                    class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        @click="open = false"
+                        class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
                         {{ $menu->label }}
                     </a>
                 @endforeach
@@ -286,7 +297,7 @@
                 @if ($menus->contains('anchor', '/karir'))
                     <a href="{{ route('career.index') }}"
                         @click="open = false"
-                        class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        class="rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50">
                         Career
                     </a>
                 @endif
@@ -294,11 +305,12 @@
                 {{-- CONTACT --}}
                 @if ($menus->contains('anchor', 'contact'))
                     <a href="{{ url('/') }}#contact"
-                    @click="open = false"
-                    class="mt-2 rounded-full bg-accu-primary px-4 py-3 text-center text-sm font-semibold text-white">
+                        @click="open = false"
+                        class="mt-3 flex w-full items-center justify-center rounded-full bg-accu-primary px-5 py-3.5 text-sm font-bold text-white transition hover:bg-accu-dark">
                         Contact Us
                     </a>
                 @endif
+
             </div>
         </div>
     </div>
