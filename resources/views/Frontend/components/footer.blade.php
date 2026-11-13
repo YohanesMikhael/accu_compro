@@ -10,37 +10,51 @@
         {{-- TOP FOOTER --}}
         <div class="grid gap-12 pb-14 md:grid-cols-2 lg:grid-cols-4 lg:gap-10">
 
+            
             {{-- COMPANY INFORMATION --}}
             <div class="lg:col-span-1">
 
-                <a href="#home" class="inline-block">
+                <a href="{{ route('home') }}" class="inline-block">
 
-                    <img
-                        src="{{ asset('images/logo-accu.png') }}"
-                        alt="Logo ACCU"
-                        class="h-20 w-auto max-w-[220px] object-contain"
-                    >
+                    @if ($siteSetting?->logo)
+                        <img
+                            src="{{ asset('storage/' . $siteSetting->logo) }}"
+                            alt="{{ $siteSetting->company_name ?? 'Logo ACCU' }}"
+                            class="h-20 w-auto max-w-[220px] object-contain"
+                        >
+                    @else
+                        <img
+                            src="{{ asset('images/logo-accu.png') }}"
+                            alt="Logo ACCU"
+                            class="h-20 w-auto max-w-[220px] object-contain"
+                        >
+                    @endif
 
                 </a>
 
-                <p class="mt-6 max-w-sm text-sm leading-7 text-blue-100/70">
-                    PT. Abhinaya Citra Cakra Utama merupakan perusahaan yang bergerak di bidang pengadaan barang dan penyedia jasa tenaga kerja profesional untuk mendukung kebutuhan operasional bisnis Anda.
-                </p>
-
-                <div class="mt-6">
-
-                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-sky-400">
-                        Our Tagline
+                {{-- Company Description --}}
+                @if ($siteSetting?->company_description)
+                    <p class="mt-6 max-w-sm text-sm leading-7 text-blue-100/70">
+                        {{ $siteSetting->company_description }}
                     </p>
+                @endif
 
-                    <p class="mt-2 text-lg font-bold italic text-white">
-                        Your Facility Service Solution.
-                    </p>
+                {{-- Tagline --}}
+                @if ($siteSetting?->tagline)
+                    <div class="mt-6">
 
-                </div>
+                        <p class="text-xs font-bold uppercase tracking-[0.2em] text-sky-400">
+                            Our Tagline
+                        </p>
+
+                        <p class="mt-2 text-lg font-bold italic text-white">
+                            {{ $siteSetting->tagline }}
+                        </p>
+
+                    </div>
+                @endif
 
             </div>
-
 
             {{-- QUICK LINKS --}}
             <div>

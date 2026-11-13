@@ -9,11 +9,9 @@ class Product extends Model
     protected $fillable = [
         'category_id',
         'name',
-        'slug',
         'subtitle',
         'description',
         'image',
-        'catalog_file',
         'is_active',
         'sort_order',
     ];

@@ -1,6 +1,11 @@
+
 @extends('layouts.frontend')
 
-@section('title', 'PT. ABHINAYA CITRA CAKRA UTAMA')
+@section('title', 'ACCU - Cleaning Service & Facility Management Profesional')
+
+@section('meta_description', 'PT Abhinaya Citra Cakra Utama (ACCU) menyediakan layanan cleaning service dan facility management profesional untuk kebutuhan perusahaan dan industri.')
+
+@section('meta_keywords', 'ACCU, cleaning service, facility management, jasa cleaning service, cleaning service perusahaan')
 
 @section('content')
 

@@ -282,36 +282,4 @@
         </div>
     @endif
 
-
-    {{-- Recent Activities --}}
-    <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-
-        <div class="mb-5">
-            <h3 class="font-semibold text-slate-800">
-                Aktivitas Terbaru
-            </h3>
-
-            <p class="mt-1 text-sm text-slate-500">
-                Riwayat aktivitas pengelolaan website.
-            </p>
-        </div>
-
-        @forelse ($activities as $activity)
-            <div class="border-b border-slate-100 py-3 last:border-0">
-                {{ $activity->description }}
-            </div>
-        @empty
-            <div class="rounded-lg bg-slate-50 py-8 text-center">
-                <p class="text-sm text-slate-500">
-                    Belum ada aktivitas yang tercatat.
-                </p>
-
-                <p class="mt-1 text-xs text-slate-400">
-                    Riwayat aktivitas akan muncul setelah fitur Activity Log diaktifkan.
-                </p>
-            </div>
-        @endforelse
-
-    </div>
-
 @endsection

@@ -19,14 +19,22 @@
     >
         <div class="flex h-[72px] items-center justify-between px-5 sm:h-[84px] sm:px-8">
             {{-- LOGO --}}
-            <a href="{{ url('/') }}"
+            <a href="{{ route('home') }}"
                 class="flex shrink-0 items-center">
 
+                @if ($siteSetting?->logo)
+                    <img
+                        src="{{ asset('storage/' . $siteSetting->logo) }}"
+                        alt="{{ $siteSetting->company_name ?? 'PT Abhinaya Citra Cakra Utama' }}"
+                        class="h-auto w-[150px] object-contain sm:w-[150px] lg:w-[190px]"
+                    >
+                @else
                     <img
                         src="{{ asset('images/accu-logo.png') }}"
                         alt="PT Abhinaya Citra Cakra Utama"
                         class="h-auto w-[150px] object-contain sm:w-[150px] lg:w-[190px]"
                     >
+                @endif
 
             </a>
 

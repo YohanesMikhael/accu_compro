@@ -1,4 +1,6 @@
-
+@php
+    $siteSetting = \App\Models\SiteSetting::first();
+@endphp
 <aside
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
     class="fixed inset-y-0 left-0 z-50 flex w-72 flex-col
@@ -8,11 +10,19 @@
     {{-- Logo --}}
     <div class="flex h-16 items-center justify-between border-b border-slate-800 px-6">
         <div class="flex items-center gap-3">
-            <img
-                src="{{ asset('images/accu-logo.png') }}"
-                alt="Logo ACCU"
-                class="h-10 w-auto object-contain"
-            >
+            @if ($siteSetting && $siteSetting->logo)
+                <img
+                    src="{{ asset('storage/' . $siteSetting->logo) }}"
+                    alt="{{ $siteSetting->company_name ?? 'Logo ACCU' }}"
+                    class="h-10 w-auto object-contain"
+                >
+            @else
+                <img
+                    src="{{ asset('images/accu-logo.png') }}"
+                    alt="Logo ACCU"
+                    class="h-10 w-auto object-contain"
+                >
+            @endif
 
             <div>
                 <p class="text-sm font-semibold text-white">
@@ -63,6 +73,14 @@
                     : 'text-slate-300 hover:bg-slate-800' }}">
                 <i class="fa fa-cogs mr-2"></i>
                 Menus
+            </a>
+            <a href="{{ route('admin.site-settings.edit') }}"
+                class="mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition
+                {{ request()->routeIs('admin.site-settings.*')
+                    ? 'bg-blue-600 text-white'
+                    : 'text-slate-300 hover:bg-slate-800' }}">
+                <i class="fa fa-cogs mr-2"></i>
+                Site Settings
             </a>
         </div>
 
@@ -123,13 +141,25 @@
                         'route' => 'admin.career-positions.index',
                         'icon' => 'fa-briefcase',
                     ],
+                    [
+                        'name' => 'Product Categories',
+                        'route' => 'admin.product-categories.index',
+                        'icon' => 'fa-tags',
+                    ],
+                    [
+                        'name' => 'Products',
+                        'route' => 'admin.products.index',
+                        'icon' => 'fa-cube',
+                    ],
                 ];
             @endphp
 
             @foreach ($menus as $menu)
                 <a href="{{ route($menu['route']) }}"
                     class="mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition
-                    {{ request()->routeIs($menu['route'])
+                    {{ request()->routeIs(
+                        str_replace('.index', '.*', $menu['route'])
+                    ) || request()->routeIs($menu['route'])
                         ? 'bg-blue-600 text-white'
                         : 'text-slate-300 hover:bg-slate-800' }}">
 

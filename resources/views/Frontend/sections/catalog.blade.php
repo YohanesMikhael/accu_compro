@@ -1,7 +1,25 @@
+<div
+    x-data="{
+        showProductModal: false,
+        selectedCategory: null,
+        categories: @js($productCategories->keyBy('id')),
 
-<section id="catalog" class="relative overflow-hidden bg-white py-24 sm:py-28">
+        openCatalog(id) {
+            const category = this.categories[id];
 
-    {{-- Background Decoration --}}
+            this.selectedCategory = category ?? {
+                name: '',
+                description: '',
+                logo: null,
+                products: []
+            };
+
+            this.showProductModal = true;
+        }
+    }"
+>
+    <section id="catalog" class="relative overflow-hidden bg-white py-24 sm:py-28">
+        {{-- Background Decoration --}}
     <div class="pointer-events-none absolute -right-40 top-20 h-96 w-96 rounded-full bg-blue-100/50 blur-3xl"></div>
     <div class="pointer-events-none absolute -left-40 bottom-0 h-96 w-96 rounded-full bg-sky-100/50 blur-3xl"></div>
 
@@ -34,361 +52,118 @@
 
         </div>
 
-
         {{-- PRODUCT CATEGORY GRID --}}
         <div class="grid grid-cols-1 gap-7 sm:grid-cols-2 xl:grid-cols-4">
 
+            @forelse ($productCategories as $category)
 
-            {{-- 01 UNIFORMS --}}
-            <div class="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10">
+                <div class="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10">
 
-                {{-- Card Header --}}
-                <div class="relative flex min-h-[150px] flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4 py-6 text-center">
+                    {{-- CARD HEADER --}}
+                    <div class="relative flex min-h-[150px] flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4 py-6 text-center">
 
-                    <span class="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-accu-primary text-lg font-extrabold text-white shadow-lg">
-                        01
-                    </span>
+                        <span class="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-accu-primary text-lg font-extrabold text-white shadow-lg">
+                            {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
+                        </span>
 
-                    <svg class="mb-3 text-accu-primary" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m16 3 5 3-3 5-2-1v11H8V10l-2 1-3-5 5-3c1 2 7 2 8 0Z"/>
-                        <path d="M9 4c0 2 6 2 6 0"/>
-                    </svg>
+                        @if ($category->logo)
+                            <img
+                                src="{{ asset('storage/' . $category->logo) }}"
+                                alt="Logo {{ $category->name }}"
+                                class="mb-3 h-14 w-14 object-contain"
+                            >
+                        @else
+                            <div class="mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-100 text-accu-primary">
+                                <i class="fa fa-tags text-2xl"></i>
+                            </div>
+                        @endif
 
-                    <h3 class="text-lg font-extrabold leading-tight text-accu-dark">
-                        Pengadaan<br>Seragam Karyawan
+                        <h3 class="text-lg font-extrabold leading-tight text-accu-dark">
+                            {{ $category->name }}
+                        </h3>
+
+                    </div>
+
+                    {{-- CATEGORY IMAGE --}}
+                    <div class="relative h-56 overflow-hidden bg-slate-100">
+
+                        @if ($category->image)
+                            <img
+                                src="{{ asset('storage/' . $category->image) }}"
+                                alt="{{ $category->name }}"
+                                class="h-full w-full object-cover transition duration-700 group-hover:scale-110"
+                            >
+                        @else
+                            <div class="flex h-full items-center justify-center text-slate-300">
+                                <i class="fa fa-image text-5xl"></i>
+                            </div>
+                        @endif
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-accu-dark/20 to-transparent"></div>
+
+                    </div>
+
+                    {{-- CONTENT --}}
+                    <div class="flex flex-1 flex-col p-6">
+
+                        <div class="flex-1">
+
+                            <p class="min-h-[100px] whitespace-pre-line text-sm leading-7 text-slate-600">
+                                {{ $category->description ?: 'Informasi kategori produk belum tersedia.' }}
+                            </p>
+
+                            <div class="my-5 border-t border-slate-200"></div>
+
+                            <p class="text-sm font-medium text-accu-dark">
+                                {{ $category->products->count() }} produk tersedia
+                            </p>
+
+                        </div>
+
+                        {{-- BUTTON --}}
+                        <button
+                            type="button"
+                            @click="openCatalog(@js($category->id))"
+                            class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accu-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-800"
+                        >
+                            Lihat Produk
+
+                            <svg width="17"
+                                height="17"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2">
+
+                                <path d="M7 17 17 7"/>
+                                <path d="M7 7h10v10"/>
+
+                            </svg>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            @empty
+
+                <div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-16 text-center">
+
+                    <i class="fa fa-tags text-4xl text-slate-300"></i>
+
+                    <h3 class="mt-4 text-lg font-bold text-accu-dark">
+                        Kategori Belum Tersedia
                     </h3>
 
-                </div>
-
-
-                {{-- Product Image --}}
-                <div class="relative h-56 overflow-hidden bg-slate-100">
-
-                    <img
-                        src="{{ asset('images/uniforms.png') }}"
-                        alt="Pengadaan Seragam Karyawan ACCU"
-                        class="h-full w-full object-cover transition duration-700 group-hover:scale-110"
-                    >
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-accu-dark/20 to-transparent"></div>
-
-                </div>
-
-
-                {{-- Content --}}
-                <div class="flex flex-1 flex-col p-6">
-
-                    <ul class="space-y-3 text-sm leading-6 text-slate-600">
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">
-                                ✓
-                            </span>
-                            Desain sesuai identitas perusahaan
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">
-                                ✓
-                            </span>
-                            Bahan berkualitas dan nyaman digunakan
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">
-                                ✓
-                            </span>
-                            Tersedia untuk berbagai posisi pekerjaan
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">
-                                ✓
-                            </span>
-                            Pengadaan tepat waktu dan berkelanjutan
-                        </li>
-
-                    </ul>
-
-                    <div class="my-5 border-t border-slate-200"></div>
-
-                    <p class="text-sm font-medium leading-6 text-accu-dark">
-                        Seragam yang profesional mencerminkan identitas dan membangun kepercayaan.
+                    <p class="mt-2 text-sm text-slate-500">
+                        Saat ini belum ada kategori produk yang tersedia.
                     </p>
 
-                    <a href="{{ url('/seragam-karyawan') }}"
-                       class="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accu-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-800">
-
-                        Lihat Produk
-
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17 17 7"/>
-                            <path d="M7 7h10v10"/>
-                        </svg>
-
-                    </a>
-
                 </div>
 
-            </div>
-
-
-            {{-- 02 CLEANING EQUIPMENT --}}
-            <div class="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10">
-
-                <div class="relative flex min-h-[150px] flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4 py-6 text-center">
-
-                    <span class="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-accu-primary text-lg font-extrabold text-white shadow-lg">
-                        02
-                    </span>
-
-                    <svg class="mb-3 text-accu-primary" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 3v12"/>
-                        <path d="M3 15h4"/>
-                        <path d="M5 15v5"/>
-                        <path d="M14 3v17"/>
-                        <path d="M11 20h6"/>
-                        <path d="M18 7h3v13h-3z"/>
-                        <path d="M17 7V4h5"/>
-                    </svg>
-
-                    <h3 class="text-lg font-extrabold leading-tight text-accu-dark">
-                        Pengadaan<br>Peralatan Kebersihan
-                    </h3>
-
-                </div>
-
-                <div class="relative h-56 overflow-hidden bg-slate-100">
-
-                    <img
-                        src="{{ asset('images/cleaning-equipment.png') }}"
-                        alt="Peralatan Kebersihan ACCU"
-                        class="h-full w-full object-cover transition duration-700 group-hover:scale-110"
-                    >
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-accu-dark/20 to-transparent"></div>
-
-                </div>
-
-                <div class="flex flex-1 flex-col p-6">
-
-                    <ul class="space-y-3 text-sm leading-6 text-slate-600">
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Peralatan standar kualitas industri
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Tersedia berbagai jenis peralatan
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Pengadaan sesuai kebutuhan lokasi dan skala area
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Perawatan dan penggantian berkala
-                        </li>
-
-                    </ul>
-
-                    <div class="my-5 border-t border-slate-200"></div>
-
-                    <p class="text-sm font-medium leading-6 text-accu-dark">
-                        Peralatan yang tepat untuk hasil kerja yang maksimal.
-                    </p>
-
-                    <a href="{{ url('/peralatan-kebersihan') }}"
-                       class="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accu-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-800">
-
-                        Lihat Produk
-
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17 17 7"/>
-                            <path d="M7 7h10v10"/>
-                        </svg>
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            {{-- 03 CLEANING CHEMICAL --}}
-            <div class="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10">
-
-                <div class="relative flex min-h-[150px] flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4 py-6 text-center">
-
-                    <span class="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-accu-primary text-lg font-extrabold text-white shadow-lg">
-                        03
-                    </span>
-
-                    <svg class="mb-3 text-accu-primary" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 3h6"/>
-                        <path d="M10 3v5l-5.5 10a2 2 0 0 0 1.8 3h11.4a2 2 0 0 0 1.8-3L14 8V3"/>
-                        <path d="M8 15h8"/>
-                        <path d="m10 12 1 1 2-2"/>
-                    </svg>
-
-                    <h3 class="text-lg font-extrabold leading-tight text-accu-dark">
-                        Pengadaan<br>Chemical Kebersihan
-                    </h3>
-
-                </div>
-
-                <div class="relative h-56 overflow-hidden bg-slate-100">
-
-                    <img
-                        src="{{ asset('images/cleaning-chemical.png') }}"
-                        alt="Chemical Kebersihan ACCU"
-                        class="h-full w-full object-cover transition duration-700 group-hover:scale-110"
-                    >
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-accu-dark/20 to-transparent"></div>
-
-                </div>
-
-                <div class="flex flex-1 flex-col p-6">
-
-                    <ul class="space-y-3 text-sm leading-6 text-slate-600">
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Produk chemical berkualitas dan aman digunakan
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Tersedia untuk berbagai jenis permukaan
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Ramah lingkungan (eco-friendly)
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Mendukung standar kebersihan profesional
-                        </li>
-
-                    </ul>
-
-                    <div class="my-5 border-t border-slate-200"></div>
-
-                    <p class="text-sm font-medium leading-6 text-accu-dark">
-                        Chemical yang tepat untuk lingkungan yang lebih bersih, sehat, dan aman.
-                    </p>
-
-                    <a href="{{ url('/chemical-kebersihan') }}"
-                       class="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accu-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-800">
-
-                        Lihat Produk
-
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17 17 7"/>
-                            <path d="M7 7h10v10"/>
-                        </svg>
-
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            {{-- 04 CLEANING MACHINES --}}
-            <div class="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10">
-
-                <div class="relative flex min-h-[150px] flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4 py-6 text-center">
-
-                    <span class="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-accu-primary text-lg font-extrabold text-white shadow-lg">
-                        04
-                    </span>
-
-                    <svg class="mb-3 text-accu-primary" width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 18V7a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v11"/>
-                        <path d="M6 11h12"/>
-                        <path d="M4 18h16"/>
-                        <circle cx="8" cy="20" r="1"/>
-                        <circle cx="16" cy="20" r="1"/>
-                        <path d="M9 7h6"/>
-                    </svg>
-
-                    <h3 class="text-lg font-extrabold leading-tight text-accu-dark">
-                        Pengadaan<br>Mesin Kebersihan
-                    </h3>
-
-                </div>
-
-                <div class="relative h-56 overflow-hidden bg-slate-100">
-
-                    <img
-                        src="{{ asset('images/cleaning-machines.png') }}"
-                        alt="Mesin Kebersihan ACCU"
-                        class="h-full w-full object-cover transition duration-700 group-hover:scale-110"
-                    >
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-accu-dark/20 to-transparent"></div>
-
-                </div>
-
-                <div class="flex flex-1 flex-col p-6">
-
-                    <ul class="space-y-3 text-sm leading-6 text-slate-600">
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Mesin kebersihan standar industri
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Tersedia untuk kebutuhan indoor dan outdoor
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Pengadaan unit baru maupun penggantian unit
-                        </li>
-
-                        <li class="flex gap-2">
-                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-100 text-accu-primary">✓</span>
-                            Dukungan sparepart dan maintenance
-                        </li>
-
-                    </ul>
-
-                    <div class="my-5 border-t border-slate-200"></div>
-
-                    <p class="text-sm font-medium leading-6 text-accu-dark">
-                        Mesin yang andal untuk kebersihan yang lebih optimal dan efisien.
-                    </p>
-
-                    <a href="{{ url('/mesin-kebersihan') }}"
-                       class="mt-6 inline-flex items-center justify-center gap-2 rounded-xl bg-accu-primary px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-800">
-
-                        Lihat Produk
-
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M7 17 17 7"/>
-                            <path d="M7 7h10v10"/>
-                        </svg>
-
-                    </a>
-
-                </div>
-
-            </div>
-
+            @endforelse
 
         </div>
-
 
         {{-- BOTTOM CTA --}}
         <div class="mt-16 rounded-3xl bg-gradient-to-r from-blue-950 via-blue-900 to-blue-700 px-8 py-10 text-center sm:px-12 lg:flex lg:items-center lg:justify-between lg:text-left">
@@ -410,7 +185,7 @@
             </div>
 
             <a href="#contact"
-               class="mt-7 inline-flex shrink-0 items-center justify-center gap-3 rounded-full bg-white px-7 py-4 text-sm font-bold text-accu-primary transition hover:-translate-y-1 hover:bg-blue-50 lg:mt-0">
+                class="mt-7 inline-flex shrink-0 items-center justify-center gap-3 rounded-full bg-white px-7 py-4 text-sm font-bold text-accu-primary transition hover:-translate-y-1 hover:bg-blue-50 lg:mt-0">
 
                 Hubungi Kami
 
@@ -422,7 +197,129 @@
             </a>
 
         </div>
-
     </div>
+    </section>
 
-</section>
+    {{-- PRODUCT MODAL --}}
+    <div
+        x-show="showProductModal"
+        x-cloak
+        x-transition.opacity
+        @keydown.escape.window="showProductModal = false"
+        @click.self="showProductModal = false"
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm"
+    >
+        <div
+            x-show="showProductModal"
+            x-transition
+            class="relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+        >
+
+            {{-- MODAL HEADER --}}
+            <div class="flex items-center justify-between border-b border-slate-100 px-6 py-5 sm:px-8">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-accu-primary">
+                        Our Products
+                    </span>
+
+                    <h3
+                        class="mt-1 text-xl font-extrabold text-accu-dark sm:text-2xl"
+                        x-text="selectedCategory?.name"
+                    ></h3>
+
+                    <p
+                        class="mt-1 text-sm text-slate-500"
+                        x-text="selectedCategory?.description"
+                    ></p>
+                </div>
+
+                <button
+                    type="button"
+                    @click="showProductModal = false"
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+                    aria-label="Tutup modal"
+                >
+                    <i class="fa fa-times text-lg"></i>
+                </button>
+            </div>
+
+            {{-- PRODUCT LIST --}}
+            <div class="overflow-y-auto p-6 sm:p-8">
+
+                <template x-if="selectedCategory?.products?.length > 0">
+                    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+                        <template x-for="product in selectedCategory.products" :key="product.id">
+                            <div class="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:-translate-y-1 hover:shadow-xl">
+
+                                {{-- IMAGE --}}
+                                <div class="relative h-52 overflow-hidden bg-slate-100">
+                                    <template x-if="product.image">
+                                        <img
+                                            :src="'/storage/' + product.image"
+                                            :alt="product.name"
+                                            class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                        >
+                                    </template>
+
+                                    <template x-if="!product.image">
+                                        <div class="flex h-full items-center justify-center text-4xl text-slate-300">
+                                            <i class="fa fa-image"></i>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                {{-- CONTENT --}}
+                                <div class="p-5">
+                                    <h4
+                                        class="text-lg font-extrabold text-accu-dark"
+                                        x-text="product.name"
+                                    ></h4>
+
+                                    <p
+                                        class="mt-2 text-sm font-medium text-accu-primary"
+                                        x-text="product.subtitle"
+                                        x-show="product.subtitle"
+                                    ></p>
+
+                                    <p
+                                        class="mt-3 whitespace-pre-line text-sm leading-7 text-slate-500"
+                                        x-text="product.description || 'Informasi produk belum tersedia.'"
+                                    ></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                {{-- EMPTY STATE --}}
+                <template x-if="selectedCategory && (!selectedCategory.products || selectedCategory.products.length === 0)">
+                    <div class="py-16 text-center">
+                        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-accu-primary">
+                            <i class="fa fa-cube"></i>
+                        </div>
+
+                        <h4 class="mt-5 text-lg font-bold text-accu-dark">
+                            Produk Belum Tersedia
+                        </h4>
+
+                        <p class="mt-2 text-sm text-slate-500">
+                            Saat ini belum ada produk aktif pada kategori ini.
+                        </p>
+                    </div>
+                </template>
+            </div>
+
+            {{-- MODAL FOOTER --}}
+            <div class="border-t border-slate-100 px-6 py-4 text-right sm:px-8">
+                <button
+                    type="button"
+                    @click="showProductModal = false"
+                    class="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                >
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

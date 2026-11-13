@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+
 @section('content')
 
 <div class="space-y-6">
@@ -542,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function () {
         'handshake', 'heart', 'info', 'lightbulb', 'medal',
         'message-circle', 'package', 'panorama', 'rocket', 'shield',
         'shield-check', 'settings', 'shapes', 'star', 'target',
-        'thumbs-up', 'trending-up', 'users', 'wallet', 'zap'
+        'thumbs-up', 'trending-up', 'users', 'wallet', 'zap', 'x'
     ];
 
     function renderLucide(root = document) {

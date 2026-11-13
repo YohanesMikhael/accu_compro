@@ -19,6 +19,7 @@ use App\Models\Gallery;
 use App\Models\SiteSetting;
 use App\Models\ContactSetting;
 
+
 class HomeController extends Controller
 {
     public function index()
@@ -76,6 +77,18 @@ class HomeController extends Controller
             ->orderBy('sort_order')
             ->get();
 
+        $productCategories = ProductCategory::with([
+            'products' => function ($query) {
+                $query->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('id');
+            }
+        ])
+        ->where('is_active', true)
+        ->orderBy('sort_order')
+        ->orderBy('id')
+        ->get();
+
         $galleries = Gallery::where('is_active', true)
             ->orderBy('sort_order')
             ->get();
@@ -98,6 +111,7 @@ class HomeController extends Controller
             'categories',
             'galleries',
             'contact',
+            'productCategories',
             'settings'
         ));
     }
